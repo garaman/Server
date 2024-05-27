@@ -16,6 +16,12 @@ namespace ServerCore
 
         static void Main(string[] args)
         {
+            ThreadPool.SetMinThreads(1, 1);
+            ThreadPool.SetMinThreads(5, 5);
+            
+            Task t = new Task(() => { while (true) { } });
+            t.Start();
+
             ThreadPool.QueueUserWorkItem(MainThread);
 
 
