@@ -1,39 +1,52 @@
 ﻿using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 namespace ServerCore
 {
     internal class Program
     {
-        static void MainThread(object state)
+        static Listener _listener = new Listener();
+        static void OnAcceptHandler(Socket clientSocket)
         {
-            for (int i = 0; i < 5; i++)
-            {
-                Console.WriteLine("Hello Thread");
-            }
-            
-        }
+            try
+            {   
+                Session session = new Session();
+                session.Start(clientSocket);
 
+                byte[] sendbuffer = Encoding.UTF8.GetBytes("Welcome to Server!");
+                session.Send(sendbuffer);
+                
+                Thread.Sleep(1000);
+
+                session.Disconnect();
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine(ex.ToString());
+            }
+           
+        }
         static void Main(string[] args)
         {
-            ThreadPool.SetMinThreads(1, 1);
-            ThreadPool.SetMinThreads(5, 5);
+            // DNS (Domain Name System)
+            string host = Dns.GetHostName();
+            IPHostEntry ipHost = Dns.GetHostEntry(host);
+            IPAddress ipAddr = ipHost.AddressList[0];
+            IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
+
+           
+            _listener.Init(endPoint, OnAcceptHandler);
+            Console.WriteLine("Listening....");
+
+            while (true)
+            {              
+                                                   
+            }
+           
             
-            Task t = new Task(() => { while (true) { } });
-            t.Start();
-
-            ThreadPool.QueueUserWorkItem(MainThread);
-
-
-            /*
-            Thread t = new Thread(MainThread);
-            t.Name = "test Thread";
-            t.IsBackground = true;
-            t.Start();
-            Console.WriteLine("Waiting for Thread");
-            t.Join();
-            Console.WriteLine("Hello, World!");
-            */
         }
     }
 }
