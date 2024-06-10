@@ -8,37 +8,6 @@ using ServerCore;
 
 namespace Server
 {
-    class GameSession : Session
-    {
-        public override void OnConnected(EndPoint endPoint)
-        {
-            Console.WriteLine($"OnConnected: {endPoint}");
-
-            byte[] sendbuffer = Encoding.UTF8.GetBytes("Welcome to Server!");
-            Send(sendbuffer);
-
-            Thread.Sleep(1000);
-
-            Disconnect();
-        }
-
-        public override void OnDisconnected(EndPoint endPoint)
-        {
-            Console.WriteLine($"OnDisconnected: {endPoint}");
-        }
-
-        public override void OnRecv(ArraySegment<byte> buffer)
-        {
-            string recvData = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
-            Console.WriteLine($"[From Client] {recvData}");
-        }
-
-        public override void OnSend(int numOfByte)
-        {
-            Console.WriteLine($"Transferred bytes: {numOfByte}");
-        }
-    }
-
     internal class Program
     {
         static Listener _listener = new Listener();
@@ -52,7 +21,7 @@ namespace Server
             IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
 
 
-            _listener.Init(endPoint, () => { return new GameSession(); });
+            _listener.Init(endPoint, () => { return new ClientSession(); });
             Console.WriteLine("Listening....");
 
             while (true)
