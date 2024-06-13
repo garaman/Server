@@ -8,31 +8,28 @@ using System.Threading.Tasks;
 
 namespace DummyClient
 {
-    class Packet
-    {
-        public ushort size;
-        public ushort packetId;
-    }
-
     class ServerSession : Session
     {
         public override void OnConnected(EndPoint endPoint)
         {
-            Console.WriteLine($"OnConnected: {endPoint}");
+            Console.WriteLine($"OnConnected : {endPoint}");
 
-            Packet packet = new Packet() { size = 4, packetId = 7 };
+            C_PlayerInfoReq packet = new C_PlayerInfoReq() { playerId = 1001, name = "ABCD" };
+
+            var skill = new C_PlayerInfoReq.Skill() { id = 101, level = 1, duration = 3.0f };
+            skill.attributes.Add(new C_PlayerInfoReq.Skill.Attribute() { att = 77 });
+            packet.skills.Add(skill);
+
+            packet.skills.Add(new C_PlayerInfoReq.Skill() { id = 201, level = 2, duration = 4.0f });
+            packet.skills.Add(new C_PlayerInfoReq.Skill() { id = 301, level = 3, duration = 5.0f });
+            packet.skills.Add(new C_PlayerInfoReq.Skill() { id = 401, level = 4, duration = 6.0f });
 
             // 보낸다
-            for (int i = 0; i < 5; i++)
+            //for (int i = 0; i < 5; i++)
             {
-                ArraySegment<byte> openSegment = SendBufferHelper.Open(4096);
-                byte[] buffer = BitConverter.GetBytes(packet.size);
-                byte[] buffer2 = BitConverter.GetBytes(packet.packetId);
-                Array.Copy(buffer, 0, openSegment.Array, openSegment.Offset, buffer.Length);
-                Array.Copy(buffer2, 0, openSegment.Array, openSegment.Offset + buffer.Length, buffer2.Length);
-                ArraySegment<byte> sendbuffer = SendBufferHelper.Close(packet.size);
-
-                Send(sendbuffer);
+                ArraySegment<byte> s = packet.Write();
+                if (s != null)
+                    Send(s);
             }
         }
 
