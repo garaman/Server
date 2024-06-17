@@ -17,23 +17,20 @@ namespace DummyClient
 
             Connector connector = new Connector();
 
-            connector.Connect(endPoint, () => { return new ServerSession(); });
+            connector.Connect(endPoint, () => { return SessionManager.instance.Generate(); }, 10);
 
             while (true)
             {
-                
-            
-            
                 try
-                {
-                   
+                {                    
+                    SessionManager.instance.SendForEach();
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.ToString());
                 }
 
-                Thread.Sleep(1000);
+                Thread.Sleep(250);
             }
         }
     }

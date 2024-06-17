@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = PacketGenerator
-build_property.ProjectDir = C:\Users\user\OneDrive\바탕 화면\Project\Server\PacketGenerator\
+build_property.ProjectDir = E:\Programming\Server\PacketGenerator\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
