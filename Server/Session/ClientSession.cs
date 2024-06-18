@@ -13,6 +13,10 @@ namespace Server.Session
         public int SessionId { get; set; }
         public GameRoom Room { get; set; }
 
+        public float PosX { get; set; }
+        public float PosY { get; set; }
+        public float PosZ { get; set; }
+
         public override void OnConnected(EndPoint endPoint)
         {
             Console.WriteLine($"OnConnected: {endPoint}");
@@ -41,7 +45,7 @@ namespace Server.Session
 
         public override void OnSend(int numOfByte)
         {
-           Console.WriteLine($"Transferred bytes: {numOfByte}");
+           //Console.WriteLine($"Transferred bytes: {numOfByte}");
         }
     }
 

@@ -7,9 +7,8 @@ using System.Text;
 
 class PacketHandler
 {
-	public static void C_ChatHandler(PacketSession session, IPacket packet)
+	public static void C_LeaveGameHandler(PacketSession session, IPacket packet)
 	{        
-		C_Chat chatPacket = packet as C_Chat;
 		ClientSession clientSession = session as ClientSession;
 
         if (clientSession.Room == null)
@@ -18,9 +17,23 @@ class PacketHandler
         }
 
         GameRoom room = clientSession.Room;
-        room.Push(
-            () => room.Broadcast(clientSession, chatPacket.chat)
-        );
+        room.Push( () => room.Leave(clientSession) );
+
+        //clientSession.Room.Broadcast(clientSession, chatPacket.chat);
+    }
+
+    public static void C_MoveHandler(PacketSession session, IPacket packet)
+    {
+        C_Move movePacket = packet as C_Move;
+        ClientSession clientSession = session as ClientSession;
+
+        if (clientSession.Room == null)
+        {
+            return;
+        }
+
+        GameRoom room = clientSession.Room;
+        room.Push(() => room.Move(clientSession, movePacket));
 
         //clientSession.Room.Broadcast(clientSession, chatPacket.chat);
     }
